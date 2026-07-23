@@ -1,9 +1,9 @@
-package org.mcpservergenerate.model;
+package org.hope.mcpservergenerate.model.http;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.mcpservergenerate.model.enums.HttpParameterLocation;
+import org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation;
 
 /**
  * 参数

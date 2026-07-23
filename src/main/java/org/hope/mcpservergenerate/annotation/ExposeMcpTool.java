@@ -1,4 +1,4 @@
-package org.mcpservergenerate.annotation;
+package org.hope.mcpservergenerate.annotation;
 
 import java.lang.annotation.*;
 

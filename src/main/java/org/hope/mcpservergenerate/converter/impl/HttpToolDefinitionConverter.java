@@ -1,9 +1,9 @@
-package org.mcpservergenerate.converter.impl;
+package org.hope.mcpservergenerate.converter.impl;
 
-import org.mcpservergenerate.converter.Converter;
-import org.mcpservergenerate.model.HttpParameterDefinition;
-import org.mcpservergenerate.model.HttpToolDefinition;
-import org.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.converter.Converter;
+import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
+import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
+import org.hope.mcpservergenerate.model.ToolDefinition;
 import org.springframework.http.HttpMethod;
 
 import java.lang.reflect.Method;
@@ -11,9 +11,9 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mcpservergenerate.utils.http.HttpMethodUtils.getHttpMethods;
-import static org.mcpservergenerate.utils.http.HttpParamUtils.getHttpParam;
-import static org.mcpservergenerate.utils.http.RequestPathUtils.getRequestPath;
+import static org.hope.mcpservergenerate.utils.http.HttpMethodUtils.getHttpMethods;
+import static org.hope.mcpservergenerate.utils.http.HttpParamUtils.getHttpParam;
+import static org.hope.mcpservergenerate.utils.http.RequestPathUtils.getRequestPath;
 
 /**
  * @author 关岁安

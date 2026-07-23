@@ -1,4 +1,4 @@
-package org.mcpservergenerate.model;
+package org.hope.mcpservergenerate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

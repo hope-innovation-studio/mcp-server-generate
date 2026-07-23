@@ -1,10 +1,11 @@
-package org.mcpservergenerate.model;
+package org.hope.mcpservergenerate.model.http;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import org.hope.mcpservergenerate.model.ToolDefinition;
 import org.springframework.http.HttpMethod;
 
 import java.lang.reflect.Type;
@@ -20,7 +21,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class HttpToolDefinition extends ToolDefinition{
+public class HttpToolDefinition extends ToolDefinition {
     /**
      * 路径
      */

@@ -1,6 +1,6 @@
-package org.mcpservergenerate.scanner;
+package org.hope.mcpservergenerate.scanner;
 
-import org.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.model.ToolDefinition;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
 

@@ -1,7 +1,7 @@
-package org.mcpservergenerate.utils.http;
+package org.hope.mcpservergenerate.utils.http;
 
-import org.mcpservergenerate.model.HttpParameterDefinition;
-import org.mcpservergenerate.model.enums.HttpParameterLocation;
+import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
+import org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
@@ -9,9 +9,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static org.mcpservergenerate.model.enums.HttpParameterLocation.*;
+import static org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation.fromOrder;
+import static org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation.getHttpParameterLocation;
 
 /**
  * @author 关岁安

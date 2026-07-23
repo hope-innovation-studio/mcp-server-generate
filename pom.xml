@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.nageoffer.onecoupon</groupId>
+    <groupId>org.hope.mcpservergenerate</groupId>
     <artifactId>mcp-server-generate</artifactId>
     <version>1.0-SNAPSHOT</version>
 
