@@ -27,4 +27,6 @@ public class ToolDefinition {
      */
     private String description;
 
+
+    private Method method;
 }

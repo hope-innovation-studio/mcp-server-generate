@@ -17,7 +17,7 @@ public class HttpParameterDefinition {
     /**
      * 参数名字
      */
-    private String name;
+    private String key;
 
     /**
      * 参数所在位置。

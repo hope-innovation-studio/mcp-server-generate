@@ -10,12 +10,15 @@ import java.util.List;
 
 /**
  * 扫描一个类中有哪些方法打上了 @ExposeMcpTool
+ * 并且放回ToolDefinition类型的集合
  * 一个类中有多个方法
+ * @author 关岁安
+ * @since 2026/7/21
  */
 public class ToolScanner {
 
-    public List<ToolDefinition> scan(Class<?> toolContainerType) {
-        return Arrays.stream(toolContainerType.getDeclaredMethods())
+    public List<ToolDefinition> scan(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredMethods())
                 .filter(method -> Modifier.isPublic(method.getModifiers()))
                 .filter(method -> method.isAnnotationPresent(ExposeMcpTool.class))
                 .map(this::toToolDefinition)
