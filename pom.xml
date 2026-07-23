@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>org.hope.mcpservergenerate</groupId>
+    <groupId>org.hope-innovation-studio.mcpservergenerate</groupId>
     <artifactId>mcp-server-generate</artifactId>
     <version>1.0-SNAPSHOT</version>
 
