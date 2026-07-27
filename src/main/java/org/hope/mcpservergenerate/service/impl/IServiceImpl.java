@@ -2,13 +2,15 @@ package org.hope.mcpservergenerate.service.impl;
 
 
 import lombok.RequiredArgsConstructor;
+import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.converter.Converter;
 import org.hope.mcpservergenerate.model.ToolDefinition;
 
 import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
 import org.hope.mcpservergenerate.scanner.SpringToolScanner;
-import org.hope.mcpservergenerate.service.IBaseService;
 
+
+import org.hope.mcpservergenerate.service.IService;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
@@ -20,14 +22,15 @@ import java.util.List;
  * @since 2026/7/27
  */
 @RequiredArgsConstructor
-public class IBaseServiceImpl implements IBaseService {
+public class IServiceImpl implements IService {
 
    private final SpringToolScanner springToolScanner;
    private final ApplicationContext applicationContext;
    private final Converter<HttpToolDefinition> converter;
+   private final HttpToolDefinitionContext httpToolDefinitionContext;
 
     @Override
-    public List<HttpToolDefinition> httpDataPipeline() {
+    public void httpDataPipeline() {
         List<HttpToolDefinition> ans = new ArrayList<>();
         List<ToolDefinition> allHttpToolDefinitionList = springToolScanner.scan(applicationContext);
         for (ToolDefinition toolDefinition : allHttpToolDefinitionList) {
@@ -39,7 +42,7 @@ public class IBaseServiceImpl implements IBaseService {
         for (HttpToolDefinition an : ans) {
             System.out.println("拿到的工具定义为:"+an);
         }
-        return ans;
+        httpToolDefinitionContext.set(ans);
     }
 
 }

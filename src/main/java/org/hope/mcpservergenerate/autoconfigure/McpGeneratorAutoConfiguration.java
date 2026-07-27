@@ -1,9 +1,13 @@
 package org.hope.mcpservergenerate.autoconfigure;
 
+import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
+import org.hope.mcpservergenerate.controller.BaseController;
 import org.hope.mcpservergenerate.converter.impl.HttpToolDefinitionConverter;
 import org.hope.mcpservergenerate.scanner.SpringToolScanner;
-import org.hope.mcpservergenerate.service.IBaseService;
-import org.hope.mcpservergenerate.service.impl.IBaseServiceImpl;
+
+import org.hope.mcpservergenerate.service.IService;
+
+import org.hope.mcpservergenerate.service.impl.IServiceImpl;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,6 +30,7 @@ import org.springframework.context.annotation.Bean;
 
 @AutoConfiguration
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+//写了这个EnableConfigurationProperties注解 可以在controller直接使用这个对象的数据
 @EnableConfigurationProperties(McpGeneratorProperties.class)
 @ConditionalOnProperty(
         prefix = "mcp.generator",
@@ -36,20 +41,36 @@ import org.springframework.context.annotation.Bean;
 public class McpGeneratorAutoConfiguration {
 
 
+    @Bean
+    public HttpToolDefinitionContext httpToolDefinitionContext() {
+        return new HttpToolDefinitionContext();
+    }
 
 
     @Bean
-    public IBaseService baseService(ApplicationContext applicationContext) {
-        return new IBaseServiceImpl(
+    public IService baseService(
+            ApplicationContext applicationContext,
+            HttpToolDefinitionContext httpToolDefinitionContext
+    ) {
+        return new IServiceImpl(
                 new SpringToolScanner(),
                 applicationContext,
-                new HttpToolDefinitionConverter()
+                new HttpToolDefinitionConverter(),
+                httpToolDefinitionContext
         );
     }
 
     @Bean
-    public ApplicationRunner mcpToolInitializer(IBaseService baseService) {
+    public BaseController baseController(
+            HttpToolDefinitionContext httpToolDefinitionContext
+    ) {
+        return new BaseController(httpToolDefinitionContext);
+    }
+
+    @Bean
+    public ApplicationRunner mcpToolInitializer(IService baseService) {
         return args -> baseService.httpDataPipeline();
     }
+
 
 }

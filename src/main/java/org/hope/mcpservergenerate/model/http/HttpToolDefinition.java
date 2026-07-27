@@ -1,5 +1,6 @@
 package org.hope.mcpservergenerate.model.http;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -29,6 +30,7 @@ public class HttpToolDefinition extends ToolDefinition {
     /**
      * 请求方式
      */
+    @JsonIgnore
     private HttpMethod requestMethod;
     /**
      * 请求体格式，
@@ -46,6 +48,7 @@ public class HttpToolDefinition extends ToolDefinition {
     /**
      * 返回类型
      */
+    @JsonIgnore
     private Type returnType;
 
     public HttpToolDefinition(ToolDefinition toolDefinition){

@@ -1,5 +1,6 @@
 package org.hope.mcpservergenerate.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,6 @@ public class ToolDefinition {
      */
     private String description;
 
-
+    @JsonIgnore
     private Method method;
 }
