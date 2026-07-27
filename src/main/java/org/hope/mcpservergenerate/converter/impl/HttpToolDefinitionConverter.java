@@ -5,6 +5,7 @@ import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
 import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
 import org.hope.mcpservergenerate.model.ToolDefinition;
 import org.springframework.http.HttpMethod;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -20,6 +21,7 @@ import static org.hope.mcpservergenerate.utils.http.RequestPathUtils.getRequestP
  * @since 2026/7/21
  * 将ToolDefinition -> HttpToolDefinition
  */
+@Component
 public class HttpToolDefinitionConverter implements Converter<HttpToolDefinition> {
 
 

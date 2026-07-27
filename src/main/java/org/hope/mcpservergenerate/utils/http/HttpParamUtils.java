@@ -44,7 +44,8 @@ public class HttpParamUtils {
             }
             if ((number & (number - 1)) == 0) {
                 int trailingZeros = Integer.numberOfTrailingZeros(number);
-                int position = trailingZeros + 1;
+//                int position = trailingZeros + 1;
+                int position = 9 - trailingZeros;
                 String key = parameter.getName();
                 HttpParameterLocation location = getHttpParameterLocation(position);
                 Boolean required = isRequired(parameter, location);

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 方法级别的
  * 扫描一个类中有哪些方法打上了 @ExposeMcpTool
  * 并且放回ToolDefinition类型的集合
  * 一个类中有多个方法

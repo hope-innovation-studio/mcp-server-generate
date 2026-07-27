@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 类级别的
  * 专门用来扫描springboot中的类
  * @author 关岁安
  */
