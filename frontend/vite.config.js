@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     proxy: {
-      '/httpDefinitionTool': {
+      '/v3/api-docs': {
         target: 'http://localhost:8080',
         changeOrigin: true,
       },
