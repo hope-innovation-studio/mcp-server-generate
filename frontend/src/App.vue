@@ -33,7 +33,7 @@ const activeTools = computed(() => {
 const selectedCount = computed(() => selectedToolIds.value.size)
 
 function toolId(tool) {
-  return [tool.requestMethod ?? 'HTTP', tool.endpoint ?? '', tool.name ?? ''].join(':')
+  return tool.id ?? [tool.requestMethod ?? 'HTTP', tool.endpoint ?? '', tool.name ?? ''].join(':')
 }
 
 function changeTransport(transport) {
@@ -74,7 +74,8 @@ async function loadTools() {
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}`)
     }
-    httpTools.value = await response.json()
+    const payload = await response.json()
+    httpTools.value = Array.isArray(payload) ? payload : Object.values(payload)
   } catch (error) {
     loadError.value = `加载 HTTP Tool 失败：${error.message}`
   } finally {

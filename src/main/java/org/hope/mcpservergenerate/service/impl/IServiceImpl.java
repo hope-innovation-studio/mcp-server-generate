@@ -6,6 +6,7 @@ import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.converter.Converter;
 import org.hope.mcpservergenerate.model.ToolDefinition;
 
+import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
 import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
 import org.hope.mcpservergenerate.scanner.SpringToolScanner;
 
@@ -14,7 +15,10 @@ import org.hope.mcpservergenerate.service.IService;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -42,7 +46,11 @@ public class IServiceImpl implements IService {
         for (HttpToolDefinition an : ans) {
             System.out.println("拿到的工具定义为:"+an);
         }
-        httpToolDefinitionContext.set(ans);
+        Map<String, HttpToolDefinition> res = new HashMap<>();
+        for (HttpToolDefinition an : ans) {
+            res.put(an.getId(),an);
+        }
+        httpToolDefinitionContext.set(res);
     }
 
 }

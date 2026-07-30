@@ -1,5 +1,6 @@
 package org.hope.mcpservergenerate.model.http;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -28,6 +29,11 @@ public class HttpParameterDefinition {
      * 是否必填。
      */
     private Boolean required;
+
+    /**
+     * 这个参数的类型
+     */
+    private ObjectNode type;
 
 
 }
