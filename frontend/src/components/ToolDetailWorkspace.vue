@@ -9,7 +9,11 @@ function methodLabel(tool) {
 }
 
 function parameterType(parameter) {
-  return parameter.type || '未知类型'
+  return parameter.type?.type || '未知类型'
+}
+
+function formatSchema(schema) {
+  return schema ? JSON.stringify(schema, null, 2) : '暂无结构信息'
 }
 </script>
 
@@ -71,7 +75,7 @@ function parameterType(parameter) {
         <article class="detail-card response-card">
           <span class="card-label">RESPONSE</span>
           <strong>{{ tool.produces || 'application/json' }}</strong>
-          <p>{{ tool.returnType || '返回类型暂未提供' }}</p>
+          <pre class="schema-code">{{ formatSchema(tool.returnType) }}</pre>
         </article>
       </div>
     </template>

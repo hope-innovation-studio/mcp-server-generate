@@ -20,6 +20,12 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.hope-innovation-studio.mcpservergenerate</groupId>
             <artifactId>mcp-server-generate</artifactId>

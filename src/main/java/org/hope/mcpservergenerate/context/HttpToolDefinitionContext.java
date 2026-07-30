@@ -1,10 +1,12 @@
 package org.hope.mcpservergenerate.context;
 
 import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 关岁安
@@ -12,13 +14,13 @@ import java.util.List;
  */
 @Component
 public class HttpToolDefinitionContext {
-    private List<HttpToolDefinition> httpToolDefinitions = new ArrayList<>();
+    private Map<String, HttpToolDefinition> items;
 
-    public void set(List<HttpToolDefinition> list){
-        this.httpToolDefinitions = list;
+    public Map<String, HttpToolDefinition> get(){
+        return this.items;
     }
 
-    public List<HttpToolDefinition> get(){
-        return this.httpToolDefinitions;
+    public void set(Map<String, HttpToolDefinition> map){
+        this.items = map;
     }
 }

@@ -11,5 +11,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExposeMcpTool {
     String name() default "";
-    String description();
+    String description() default "";
 }

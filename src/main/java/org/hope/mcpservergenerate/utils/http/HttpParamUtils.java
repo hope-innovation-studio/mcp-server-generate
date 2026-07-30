@@ -1,7 +1,9 @@
 package org.hope.mcpservergenerate.utils.http;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
 import org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation;
+import org.hope.mcpservergenerate.utils.json.SchemaGeneratorSingleton;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.annotation.Annotation;
@@ -48,7 +50,9 @@ public class HttpParamUtils {
                 String key = parameter.getName();
                 HttpParameterLocation location = getHttpParameterLocation(position);
                 Boolean required = isRequired(parameter, location);
-                ans.add(new HttpParameterDefinition(key,location,required));
+                Class<?> returnType = parameter.getType();
+                ObjectNode returnSchema = SchemaGeneratorSingleton.getInstance().generateSchema(returnType);
+                ans.add(new HttpParameterDefinition(key,location,required,returnSchema));
             } else {
                 /**
                  * TODO 设置自定的异常

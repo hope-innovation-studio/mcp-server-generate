@@ -1,15 +1,13 @@
 package org.hope.mcpservergenerate.model.http;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hope.mcpservergenerate.model.ToolDefinition;
-import org.springframework.http.HttpMethod;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 
@@ -23,6 +21,12 @@ import java.util.List;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class HttpToolDefinition extends ToolDefinition {
+
+    /**
+     * 每一个工具都应该有自己独立的id
+     */
+    private String id;
+
     /**
      * 路径
      */
@@ -30,8 +34,8 @@ public class HttpToolDefinition extends ToolDefinition {
     /**
      * 请求方式
      */
-    @JsonIgnore
-    private HttpMethod requestMethod;
+
+    private String requestMethod;
     /**
      * 请求体格式，
      * 例如 application/json、application/x-www-form-urlencoded、multipart/form-data。
@@ -48,8 +52,8 @@ public class HttpToolDefinition extends ToolDefinition {
     /**
      * 返回类型
      */
-    @JsonIgnore
-    private Type returnType;
+    private ObjectNode returnType;
+
 
     public HttpToolDefinition(ToolDefinition toolDefinition){
         super(toolDefinition.getName(),

@@ -63,10 +63,10 @@ const transports = [
       <template v-else-if="tools.length">
         <ToolSidebarItem
           v-for="tool in tools"
-          :key="`${tool.requestMethod}-${tool.endpoint}-${tool.name}`"
+          :key="tool.id"
           :tool="tool"
           :batch-mode="batchMode"
-          :selected="selectedToolIds.has(`${tool.requestMethod ?? 'HTTP'}:${tool.endpoint ?? ''}:${tool.name ?? ''}`)"
+          :selected="selectedToolIds.has(tool.id)"
           :active="activeTool === tool"
           @click="$emit('select-tool', tool)"
         />

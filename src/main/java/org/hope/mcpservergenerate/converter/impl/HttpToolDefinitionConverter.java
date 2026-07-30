@@ -1,12 +1,15 @@
 package org.hope.mcpservergenerate.converter.impl;
 
+import cn.hutool.core.util.IdUtil;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.victools.jsonschema.generator.*;
 import org.hope.mcpservergenerate.converter.Converter;
 import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
 import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
 import org.hope.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.utils.json.SchemaGeneratorSingleton;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
-
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,8 +38,14 @@ public class HttpToolDefinitionConverter implements Converter<HttpToolDefinition
         /**
          * TODO 需要补充异常处理和健壮性处理
          */
+        String idText = IdUtil.getSnowflake(1, 1).nextIdStr();
+
+
         Method method = toolDefinition.getMethod();
         Type returnType = method.getGenericReturnType();
+        //将Type转化为ObjectNode
+        ObjectNode returnSchema = SchemaGeneratorSingleton.getInstance().generateSchema(returnType);
+
         //获取参数列表
         List<HttpParameterDefinition> httpParamList = getHttpParam(method);
         List<HttpToolDefinition> ans = new ArrayList<>();
@@ -49,10 +58,11 @@ public class HttpToolDefinitionConverter implements Converter<HttpToolDefinition
             for (HttpMethod httpMethod : allHttpMethods) {
                 HttpToolDefinition httpToolDefinition = new HttpToolDefinition(toolDefinition);
                 httpToolDefinition
+                        .setId(idText)
                         .setEndpoint(path)
-                        .setRequestMethod(httpMethod)
+                        .setRequestMethod(httpMethod.name())
                         .setParameters(httpParamList)
-                        .setReturnType(returnType);
+                        .setReturnType(returnSchema);
                 ans.add(httpToolDefinition);
             }
         }
