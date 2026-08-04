@@ -6,7 +6,7 @@ import com.github.victools.jsonschema.generator.*;
  * @author 关岁安
  * @since 2026/7/30
  * 单例模式
- *
+ * 用来将Type信息转化为可以传输的结构
  */
 public class SchemaGeneratorSingleton {
 

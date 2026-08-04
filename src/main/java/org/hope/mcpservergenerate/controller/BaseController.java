@@ -30,10 +30,4 @@ public class BaseController {
         return httpToolDefinitionContext.get();
     }
 
-
-    @PostMapping("post")
-    public void update(){
-
-    }
-
 }
