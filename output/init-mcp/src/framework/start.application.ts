@@ -10,8 +10,8 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
  */
 export async function run(mcpName?: string, toolDir?: string) {
     const server = new McpServer({
-        name: mcpName ?? "mcp-generate-index",
-        version: "1.0.1",
+        name: mcpName ,
+        version: "1.0.0",
     })
 
     const config = await loadConfig()
