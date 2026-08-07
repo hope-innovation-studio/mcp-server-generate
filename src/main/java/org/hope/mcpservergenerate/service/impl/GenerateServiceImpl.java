@@ -13,7 +13,7 @@ public class GenerateServiceImpl {
 
     private final Configuration freemarkerConfig;
 
-    public void generateStartApplication(){
+    public void generateFramework(){
         return;
     }
 

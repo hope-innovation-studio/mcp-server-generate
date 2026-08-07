@@ -10,7 +10,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
  */
 export async function run(mcpName?: string, toolDir?: string) {
     const server = new McpServer({
-        name: mcpName ?? "[=(mcpName!'default-mcp-server')?js_string]",
+        name: mcpName ,
         version: "[=(version!'1.0.0')?js_string]",
     })
 
