@@ -1,12 +1,16 @@
 package org.hope.mcpservergenerate.autoconfigure;
 
+import freemarker.template.Configuration;
+import freemarker.template.TemplateExceptionHandler;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.controller.BaseController;
+import org.hope.mcpservergenerate.controller.GenerateController;
 import org.hope.mcpservergenerate.converter.impl.HttpToolDefinitionConverter;
 import org.hope.mcpservergenerate.scanner.SpringToolScanner;
 
 import org.hope.mcpservergenerate.service.IService;
 
+import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
 import org.hope.mcpservergenerate.service.impl.IServiceImpl;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
@@ -72,5 +76,37 @@ public class McpGeneratorAutoConfiguration {
         return args -> baseService.httpDataPipeline();
     }
 
+
+    @Bean
+    public Configuration freemarker(){
+        Configuration configuration = new Configuration(
+                Configuration.VERSION_2_3_34
+        );
+
+        configuration.setClassLoaderForTemplateLoading(
+                getClass().getClassLoader(),
+                "/templates"
+        );
+
+        configuration.setDefaultEncoding("UTF-8");
+        configuration.setTemplateExceptionHandler(
+                TemplateExceptionHandler.RETHROW_HANDLER
+        );
+        configuration.setInterpolationSyntax(
+                Configuration.SQUARE_BRACKET_INTERPOLATION_SYNTAX
+        );
+
+        return configuration;
+    }
+
+    @Bean
+    public GenerateServiceImpl generateService(Configuration freemarker){
+        return new GenerateServiceImpl(freemarker);
+    }
+
+    @Bean
+    public GenerateController generateController(GenerateServiceImpl generateService){
+        return new GenerateController(generateService);
+    }
 
 }
