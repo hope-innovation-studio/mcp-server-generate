@@ -4,10 +4,9 @@ package org.hope.mcpservergenerate.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.converter.Converter;
-import org.hope.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.ToolDefinition;
 
-import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
-import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
 import org.hope.mcpservergenerate.scanner.SpringToolScanner;
 
 
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  *

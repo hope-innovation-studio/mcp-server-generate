@@ -1,11 +1,8 @@
 package org.hope.mcpservergenerate.context;
 
-import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**

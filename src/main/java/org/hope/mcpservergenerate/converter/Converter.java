@@ -1,6 +1,6 @@
 package org.hope.mcpservergenerate.converter;
 
-import org.hope.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.ToolDefinition;
 
 import java.util.List;
 

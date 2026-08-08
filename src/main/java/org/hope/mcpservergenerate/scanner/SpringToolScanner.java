@@ -1,12 +1,11 @@
 package org.hope.mcpservergenerate.scanner;
 
-import org.hope.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.ToolDefinition;
 import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 类级别的

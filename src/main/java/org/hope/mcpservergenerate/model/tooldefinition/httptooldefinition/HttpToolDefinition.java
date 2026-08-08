@@ -1,4 +1,4 @@
-package org.hope.mcpservergenerate.model.http;
+package org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
@@ -6,7 +6,7 @@ import lombok.Data;
 
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import org.hope.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.ToolDefinition;
 
 import java.util.List;
 

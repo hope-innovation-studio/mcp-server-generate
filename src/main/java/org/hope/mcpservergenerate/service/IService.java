@@ -1,10 +1,5 @@
 package org.hope.mcpservergenerate.service;
 
-import org.hope.mcpservergenerate.model.ToolDefinition;
-import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
-
-import java.util.List;
-
 /**
  * @author 关岁安
  * @since 2026/7/26
