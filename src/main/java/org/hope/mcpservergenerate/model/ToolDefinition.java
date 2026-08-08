@@ -19,7 +19,6 @@ public class ToolDefinition {
     /**
      * 工具名字
      * 首先从注解去
-     * 然后
      */
     private String name;
 
