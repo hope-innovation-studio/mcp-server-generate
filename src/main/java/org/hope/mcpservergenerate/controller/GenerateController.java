@@ -1,10 +1,14 @@
 package org.hope.mcpservergenerate.controller;
 
+import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
+import org.hope.mcpservergenerate.model.R;
 import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 /**
  * @author 关岁安
@@ -15,11 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class GenerateController {
 
-    private GenerateServiceImpl generateService = new GenerateServiceImpl();
+    private final GenerateServiceImpl generateService;
 
-    @PostMapping("generate-framework")
-    public String generateFramework() {
-        generateService.generateFramework();
+    /**
+     * 创建代码工作环境下
+     * @param mcpName
+     * @param mcpVersion
+     * @param toolPath
+     * @param projectName
+     * @return
+     */
+    @PostMapping("framework-local")
+    public R<String> generateFramework(String mcpName, String mcpVersion, String toolPath, String projectName) throws TemplateException, IOException {
+        return generateService.generateFrameworkInLocal(mcpName, mcpVersion,toolPath,projectName);
     }
 
 }
