@@ -1,4 +1,4 @@
-package org.hope.mcpservergenerate.model;
+package org.hope.mcpservergenerate.model.tooldefinition;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

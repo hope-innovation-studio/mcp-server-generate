@@ -1,4 +1,4 @@
-package org.hope.mcpservergenerate.templateModel.ts;
+package org.hope.mcpservergenerate.model.templatemodel.ts;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

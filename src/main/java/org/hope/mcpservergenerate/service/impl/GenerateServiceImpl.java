@@ -6,11 +6,10 @@ import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.model.R;
-import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
-import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
-import org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation;
-import org.hope.mcpservergenerate.templateModel.ts.TsHttpToolParameterTemplateModel;
-import org.hope.mcpservergenerate.templateModel.ts.TsHttpToolTemplateModel;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpParameterDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
+import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolParameterTemplateModel;
+import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolTemplateModel;
 import org.hope.mcpservergenerate.utils.json.ZodSchemaConverter;
 import org.springframework.stereotype.Component;
 

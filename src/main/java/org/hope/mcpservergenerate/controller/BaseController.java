@@ -2,7 +2,7 @@ package org.hope.mcpservergenerate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
-import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
 
 import org.springframework.web.bind.annotation.GetMapping;
 

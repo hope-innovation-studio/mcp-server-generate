@@ -1,8 +1,8 @@
 package org.hope.mcpservergenerate.utils.http;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
-import org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpParameterDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.enums.HttpParameterLocation;
 import org.hope.mcpservergenerate.utils.json.SchemaGeneratorSingleton;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,8 +12,8 @@ import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation.fromOrder;
-import static org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation.getHttpParameterLocation;
+import static org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.enums.HttpParameterLocation.fromOrder;
+import static org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.enums.HttpParameterLocation.getHttpParameterLocation;
 
 /**
  * @author 关岁安

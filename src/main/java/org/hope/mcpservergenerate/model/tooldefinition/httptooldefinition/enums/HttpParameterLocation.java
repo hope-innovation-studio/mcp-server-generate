@@ -1,4 +1,4 @@
-package org.hope.mcpservergenerate.model.http.enums;
+package org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.enums;
 
 
 import lombok.Getter;

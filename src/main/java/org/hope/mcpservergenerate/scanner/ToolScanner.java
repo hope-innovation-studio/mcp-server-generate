@@ -1,7 +1,7 @@
 package org.hope.mcpservergenerate.scanner;
 
 import org.hope.mcpservergenerate.annotation.ExposeMcpTool;
-import org.hope.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.ToolDefinition;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
