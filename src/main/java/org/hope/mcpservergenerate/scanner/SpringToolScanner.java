@@ -13,6 +13,7 @@ import java.util.Map;
  * 专门用来扫描springboot中的类
  * @author 关岁安
  */
+@Deprecated
 public class SpringToolScanner {
 
     private final ToolScanner toolScanner = new ToolScanner();

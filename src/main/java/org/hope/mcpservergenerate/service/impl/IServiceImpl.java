@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
  * @author 关岁安
  * @since 2026/7/27
  */
+@Deprecated
 @RequiredArgsConstructor
 public class IServiceImpl implements IService {
 
