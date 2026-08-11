@@ -1,10 +1,10 @@
-package org.hope.mcpservergenerate.model.http;
+package org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hope.mcpservergenerate.model.http.enums.HttpParameterLocation;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.enums.HttpParameterLocation;
 
 /**
  * 参数

@@ -2,11 +2,10 @@ package org.hope.mcpservergenerate.converter.impl;
 
 import cn.hutool.core.util.IdUtil;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.victools.jsonschema.generator.*;
 import org.hope.mcpservergenerate.converter.Converter;
-import org.hope.mcpservergenerate.model.http.HttpParameterDefinition;
-import org.hope.mcpservergenerate.model.http.HttpToolDefinition;
-import org.hope.mcpservergenerate.model.ToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpParameterDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
+import org.hope.mcpservergenerate.model.tooldefinition.ToolDefinition;
 import org.hope.mcpservergenerate.utils.json.SchemaGeneratorSingleton;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;

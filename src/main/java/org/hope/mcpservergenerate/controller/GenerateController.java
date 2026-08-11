@@ -34,4 +34,14 @@ public class GenerateController {
         return generateService.generateFrameworkInLocal(mcpName, mcpVersion,toolPath,projectName);
     }
 
+    /**
+     * @param toolName 工具英文名字
+     * @param toolId 工具名字
+     * @return
+     */
+    @PostMapping("http-ts-tool")
+    private R<String> generateToolInLocal(String toolName ,String toolId,String projectName) throws IOException {
+        return generateService.generateToolInLocal(toolName,toolId,projectName);
+    }
+
 }

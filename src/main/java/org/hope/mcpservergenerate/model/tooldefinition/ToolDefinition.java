@@ -1,4 +1,4 @@
-package org.hope.mcpservergenerate.model;
+package org.hope.mcpservergenerate.model.tooldefinition;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,6 @@ public class ToolDefinition {
     /**
      * 工具名字
      * 首先从注解去
-     * 然后
      */
     private String name;
 

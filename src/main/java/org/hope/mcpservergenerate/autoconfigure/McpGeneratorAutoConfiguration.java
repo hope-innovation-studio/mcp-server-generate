@@ -109,12 +109,17 @@ public class McpGeneratorAutoConfiguration {
                 Configuration.SQUARE_BRACKET_INTERPOLATION_SYNTAX
         );
 
+
+        configuration.setTagSyntax(
+                Configuration.SQUARE_BRACKET_TAG_SYNTAX
+        );
+
         return configuration;
     }
 
     @Bean
-    public GenerateServiceImpl generateService(Configuration freemarker){
-        return new GenerateServiceImpl(freemarker);
+    public GenerateServiceImpl generateService(Configuration freemarker,HttpToolDefinitionContext httpToolDefinitionContext){
+        return new GenerateServiceImpl(freemarker, httpToolDefinitionContext);
     }
 
     @Bean
