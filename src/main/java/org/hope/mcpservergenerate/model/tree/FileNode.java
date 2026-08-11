@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
  * @since 2026/8/8
  */
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class FileNode extends FileSystemNode{
 
