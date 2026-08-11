@@ -39,9 +39,14 @@ public class GenerateController {
      * @param toolId 工具名字
      * @return
      */
-    @PostMapping("http-ts-tool")
-    private R<String> generateToolInLocal(String toolName ,String toolId,String projectName) throws IOException {
+    @PostMapping("generate-http-ts-tool")
+    public R<String> generateToolInLocal(String toolName ,String toolId,String projectName) throws IOException {
         return generateService.generateToolInLocal(toolName,toolId,projectName);
     }
+
+//    @PostMapping("add-http-ts-root-folder")
+//    public R<String> addHttpTsRootFolder(String rootF){
+//
+//    }
 
 }
