@@ -6,8 +6,10 @@ import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.controller.BaseController;
 import org.hope.mcpservergenerate.controller.GenerateController;
 import org.hope.mcpservergenerate.converter.impl.HttpToolDefinitionConverter;
+import org.hope.mcpservergenerate.scanner.SpringToolRegistration;
 import org.hope.mcpservergenerate.scanner.SpringToolScanner;
 
+import org.hope.mcpservergenerate.scanner.ToolScanner;
 import org.hope.mcpservergenerate.service.IService;
 
 import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
@@ -51,18 +53,18 @@ public class McpGeneratorAutoConfiguration {
     }
 
 
-    @Bean
-    public IService baseService(
-            ApplicationContext applicationContext,
-            HttpToolDefinitionContext httpToolDefinitionContext
-    ) {
-        return new IServiceImpl(
-                new SpringToolScanner(),
-                applicationContext,
-                new HttpToolDefinitionConverter(),
-                httpToolDefinitionContext
-        );
-    }
+//    @Bean
+//    public IService baseService(
+//            ApplicationContext applicationContext,
+//            HttpToolDefinitionContext httpToolDefinitionContext
+//    ) {
+//        return new IServiceImpl(
+//                new SpringToolScanner(),
+//                applicationContext,
+//                new HttpToolDefinitionConverter(),
+//                httpToolDefinitionContext
+//        );
+//    }
 
     @Bean
     public BaseController baseController(
@@ -71,9 +73,20 @@ public class McpGeneratorAutoConfiguration {
         return new BaseController(httpToolDefinitionContext);
     }
 
+
+//    @Bean
+//    public ApplicationRunner mcpToolInitializer(IService baseService) {
+//        return args -> baseService.httpDataPipeline();
+//    }
+
     @Bean
-    public ApplicationRunner mcpToolInitializer(IService baseService) {
-        return args -> baseService.httpDataPipeline();
+    public SpringToolRegistration mcpToolPostProcessor(
+            HttpToolDefinitionContext httpToolDefinitionContext
+    ){
+        return new SpringToolRegistration(
+                new ToolScanner(),
+                new HttpToolDefinitionConverter(),
+                httpToolDefinitionContext);
     }
 
 

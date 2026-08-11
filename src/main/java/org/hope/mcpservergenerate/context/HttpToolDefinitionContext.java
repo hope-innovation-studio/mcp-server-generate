@@ -3,7 +3,11 @@ package org.hope.mcpservergenerate.context;
 import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author 关岁安
@@ -11,7 +15,7 @@ import java.util.Map;
  */
 @Component
 public class HttpToolDefinitionContext {
-    private Map<String, HttpToolDefinition> items;
+    private Map<String, HttpToolDefinition> items = new ConcurrentHashMap<>();
 
     public Map<String, HttpToolDefinition> get(){
         return this.items;
@@ -19,5 +23,9 @@ public class HttpToolDefinitionContext {
 
     public void set(Map<String, HttpToolDefinition> map){
         this.items = map;
+    }
+
+    public HttpToolDefinition addIfAbsent(String k,HttpToolDefinition v){
+        return items.putIfAbsent(k,v);
     }
 }
