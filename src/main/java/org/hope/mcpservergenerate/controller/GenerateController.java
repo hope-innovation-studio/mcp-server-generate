@@ -3,8 +3,10 @@ package org.hope.mcpservergenerate.controller;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.model.R;
+import org.hope.mcpservergenerate.model.tree.FolderNode;
 import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -44,9 +46,22 @@ public class GenerateController {
         return generateService.generateToolInLocal(toolName,toolId,projectName);
     }
 
-//    @PostMapping("add-http-ts-root-folder")
-//    public R<String> addHttpTsRootFolder(String rootF){
-//
-//    }
+    /**
+     *
+     * @param rootPath 初始化路径
+     * @return
+     */
+    @PutMapping("init-http-ts-root-folder")
+    public R<String> initHttpTsRootFolder(String rootPath){
+        return generateService.initHttpTsRootFolder(rootPath);
+    }
+
+
+    @PostMapping("init-framework-ts-folder")
+    public R<FolderNode> initFrameworkTsFolder(){
+        return generateService.initFrameworkTsFolder();
+    }
+
+
 
 }

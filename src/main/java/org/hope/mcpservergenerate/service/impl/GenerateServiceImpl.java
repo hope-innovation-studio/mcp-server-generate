@@ -4,12 +4,17 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
+import org.hope.mcpservergenerate.context.HttpFileTreeContext;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.model.R;
 import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpParameterDefinition;
 import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
 import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolParameterTemplateModel;
 import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolTemplateModel;
+
+import org.hope.mcpservergenerate.model.tree.FileTreePrinter;
+import org.hope.mcpservergenerate.model.tree.FolderNode;
+import org.hope.mcpservergenerate.model.tree.httptemplatenode.TsHttpStaticTemplateFileNode;
 import org.hope.mcpservergenerate.utils.json.ZodSchemaConverter;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +32,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.hope.mcpservergenerate.constant.HttpGenerateFileConstant.FRAMEWORKS_FILE_PATH;
+
+
 /**
  * @author 关岁安
  */
@@ -38,23 +46,13 @@ public class GenerateServiceImpl {
 
     private final HttpToolDefinitionContext httpToolDefinitionContext;
 
+    private final HttpFileTreeContext httpFileTreeContext;
+
     private final String ipHost = "http://127.0.0.1:8080/";
 
     private final String OUTPUT_PATH = "OUTPUT/";
 
-    private final List<String> FRAMEWORKS_PATH =List.of(
-            "package.json",
-            "tsconfig.json",
-            "src/index.ts.ftl",
-            "src/framework/start.application.ts.ftl",
-            "src/framework/client/http-client.ts",
-            "src/framework/decorator/tool-register.decorator.ts",
-            "src/framework/interface/response.interface.ts",
-            "src/framework/interface/system.interface.ts",
-            "src/framework/interface/tool.interface.ts",
-            "src/framework/load/load-config.ts",
-            "src/framework/load/load-tool.ts"
-    );
+
 
     public R<String> generateFrameworkInLocal (String mcpName, String mcpVersion, String toolPath, String projectName) throws IOException, TemplateException {
         toolPath = toolPath == null ? "" : toolPath;
@@ -64,7 +62,7 @@ public class GenerateServiceImpl {
                 "toolPath", toolPath
         );
         Path outputPath = Path.of("output/" + projectName);
-        for (String fileName : FRAMEWORKS_PATH) {
+        for (String fileName : FRAMEWORKS_FILE_PATH) {
             String outputName = fileName.endsWith(".ftl")
                     ? fileName.substring(0, fileName.length() - 4)
                     : fileName;
@@ -159,4 +157,60 @@ public class GenerateServiceImpl {
     }
 
 
+    /**
+     * 初始化根目录
+     * @param path 初始化路径
+     * @return 是否成功
+     */
+    public R<String> initHttpTsRootFolder(String path){
+        this.httpFileTreeContext.getRoot().setPath(path);
+        return R.success("成功初始化mcp根目录");
+    }
+
+    public R<FolderNode> initFrameworkTsFolder() {
+        FolderNode root = (FolderNode) httpFileTreeContext.getRoot();
+        FolderNode src = new FolderNode("src");
+        root.add(src);
+        FolderNode framework = new FolderNode("src/framework");
+        src.add(framework);
+        FolderNode client = new FolderNode("src/framework/client");
+        framework.add(client);
+        FolderNode decorator = new FolderNode("src/framework/decorator");
+        framework.add(decorator);
+        FolderNode interfaces = new FolderNode("src/framework/interface");
+        framework.add(interfaces);
+        FolderNode load = new FolderNode("src/framework/load");
+        framework.add(load);
+
+        client.add(new TsHttpStaticTemplateFileNode(
+                "src/framework/client/http-client.ts"
+        ));
+
+        decorator.add(new TsHttpStaticTemplateFileNode(
+                "src/framework/decorator/tool-register.decorator.ts"
+        ));
+
+        interfaces.add(new TsHttpStaticTemplateFileNode(
+                "src/framework/interface/response.interface.ts"
+        ));
+
+        interfaces.add(new TsHttpStaticTemplateFileNode(
+                "src/framework/interface/system.interface.ts"
+        ));
+
+        interfaces.add(new TsHttpStaticTemplateFileNode(
+                "src/framework/interface/tool.interface.ts"
+        ));
+
+        load.add(new TsHttpStaticTemplateFileNode(
+                "src/framework/load/load-config.ts"
+        ));
+
+        load.add(new TsHttpStaticTemplateFileNode(
+                "src/framework/load/load-tool.ts"
+        ));
+        String print = FileTreePrinter.print(root);
+        System.out.println(print);
+        return R.success(root);
+    }
 }
