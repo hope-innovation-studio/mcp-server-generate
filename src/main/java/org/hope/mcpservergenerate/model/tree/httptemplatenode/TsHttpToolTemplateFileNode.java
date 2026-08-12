@@ -2,8 +2,13 @@ package org.hope.mcpservergenerate.model.tree.httptemplatenode;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolTemplateModel;
-import org.hope.mcpservergenerate.model.tree.FileSystemNode;
+import org.hope.mcpservergenerate.model.tree.FileNode;
+import org.hope.mcpservergenerate.model.tree.enums.FileNodeType;
+
+import java.util.Map;
+
 
 /**
  * @author 关岁安
@@ -12,30 +17,24 @@ import org.hope.mcpservergenerate.model.tree.FileSystemNode;
 
 @Data
 @AllArgsConstructor
-public class TsHttpToolTemplateFileNode extends FileSystemNode {
+@NoArgsConstructor
+public class TsHttpToolTemplateFileNode<T> extends FileNode {
 
-    private TsHttpToolTemplateModel toolTemplateModel;
+    /**
+     * 模板路径
+     */
+    private String templatePath;
 
-    public TsHttpToolTemplateFileNode(
-            String path,
-            TsHttpToolTemplateModel toolTemplateModel
-    ) {
+    private T toolTemplateModel;
+
+    public TsHttpToolTemplateFileNode(String path,String templatePath,T toolTemplateModel) {
         super(path);
         this.toolTemplateModel = toolTemplateModel;
+        this.templatePath = templatePath;
     }
 
     @Override
-    public void execute() {
-
-    }
-
-    @Override
-    public boolean isDirectory() {
-        return false;
-    }
-
-    @Override
-    public void update() {
-
+    public FileNodeType getNodeType() {
+        return FileNodeType.TEMPLATE_FILE;
     }
 }

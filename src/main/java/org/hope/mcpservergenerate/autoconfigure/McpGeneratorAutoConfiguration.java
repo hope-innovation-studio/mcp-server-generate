@@ -2,24 +2,27 @@ package org.hope.mcpservergenerate.autoconfigure;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateExceptionHandler;
+import org.hope.mcpservergenerate.context.HttpFileTreeContext;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.controller.BaseController;
+import org.hope.mcpservergenerate.controller.FileController;
 import org.hope.mcpservergenerate.controller.GenerateController;
 import org.hope.mcpservergenerate.converter.impl.HttpToolDefinitionConverter;
 import org.hope.mcpservergenerate.scanner.SpringToolRegistration;
-import org.hope.mcpservergenerate.scanner.SpringToolScanner;
+
 
 import org.hope.mcpservergenerate.scanner.ToolScanner;
-import org.hope.mcpservergenerate.service.IService;
 
+
+import org.hope.mcpservergenerate.service.impl.FileServiceImpl;
 import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
-import org.hope.mcpservergenerate.service.impl.IServiceImpl;
-import org.springframework.boot.ApplicationRunner;
+
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.ApplicationContext;
+
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -48,25 +51,16 @@ public class McpGeneratorAutoConfiguration {
 
 
     @Bean
+    @ConditionalOnMissingBean
     public HttpToolDefinitionContext httpToolDefinitionContext() {
         return new HttpToolDefinitionContext();
     }
 
 
-//    @Bean
-//    public IService baseService(
-//            ApplicationContext applicationContext,
-//            HttpToolDefinitionContext httpToolDefinitionContext
-//    ) {
-//        return new IServiceImpl(
-//                new SpringToolScanner(),
-//                applicationContext,
-//                new HttpToolDefinitionConverter(),
-//                httpToolDefinitionContext
-//        );
-//    }
+
 
     @Bean
+    @ConditionalOnMissingBean
     public BaseController baseController(
             HttpToolDefinitionContext httpToolDefinitionContext
     ) {
@@ -74,12 +68,9 @@ public class McpGeneratorAutoConfiguration {
     }
 
 
-//    @Bean
-//    public ApplicationRunner mcpToolInitializer(IService baseService) {
-//        return args -> baseService.httpDataPipeline();
-//    }
 
     @Bean
+    @ConditionalOnMissingBean
     public SpringToolRegistration mcpToolPostProcessor(
             HttpToolDefinitionContext httpToolDefinitionContext
     ){
@@ -91,6 +82,7 @@ public class McpGeneratorAutoConfiguration {
 
 
     @Bean
+    @ConditionalOnMissingBean
     public Configuration freemarker(){
         Configuration configuration = new Configuration(
                 Configuration.VERSION_2_3_34
@@ -118,13 +110,33 @@ public class McpGeneratorAutoConfiguration {
     }
 
     @Bean
-    public GenerateServiceImpl generateService(Configuration freemarker,HttpToolDefinitionContext httpToolDefinitionContext){
-        return new GenerateServiceImpl(freemarker, httpToolDefinitionContext);
+    @ConditionalOnMissingBean
+    public GenerateServiceImpl generateService(Configuration freemarker,HttpToolDefinitionContext httpToolDefinitionContext, HttpFileTreeContext httpFileContext){
+        return new GenerateServiceImpl(freemarker, httpToolDefinitionContext, httpFileContext);
     }
 
     @Bean
+    @ConditionalOnMissingBean
     public GenerateController generateController(GenerateServiceImpl generateService){
         return new GenerateController(generateService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public HttpFileTreeContext httpFileTreeContext(){
+        return new HttpFileTreeContext();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public FileServiceImpl fileService(HttpFileTreeContext httpFileTreeContext){
+        return new FileServiceImpl(httpFileTreeContext);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public FileController fileController(FileServiceImpl fileService){
+        return new FileController(fileService);
     }
 
 }

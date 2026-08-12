@@ -1,8 +1,12 @@
 package org.hope.mcpservergenerate.model.tree;
 
+import freemarker.template.Template;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hope.mcpservergenerate.model.tree.enums.FileNodeType;
+
+import java.util.Map;
 
 /**
  * @author 关岁安
@@ -10,20 +14,21 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class FileNode extends FileSystemNode{
+public abstract class FileNode extends FileSystemNode{
 
-    @Override
-    public void execute() {
-        System.out.println("执行业务方法");
+    /**
+     * 扩展参数
+     */
+    private Map<String,Object> extendParameters;
+
+    public FileNode(String path) {
+        super(path);
     }
 
-    @Override
-    public boolean isDirectory() {
-        return false;
-    }
 
     @Override
-    public void update() {
-
+    public FileNodeType getNodeType() {
+        return FileNodeType.DEFAULT;
     }
+
 }
