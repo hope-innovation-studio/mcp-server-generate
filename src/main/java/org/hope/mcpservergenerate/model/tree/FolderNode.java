@@ -41,12 +41,29 @@ public class FolderNode extends FileSystemNode{
         children.add(node);
     }
 
+    public FileSystemNode add(FileSystemNode parentFolder, String folderName){
+        FolderNode newFolder = new FolderNode(
+                buildChildPath(parentFolder.getPath(), folderName)
+        );
+        this.add(newFolder);
+        return newFolder;
+    }
+
     public void delete(){
 
     }
 
     public void select(){
 
+    }
+
+    private String buildChildPath(String parentPath, String childName) {
+        if (parentPath == null || parentPath.isBlank()) {
+            return childName;
+        }
+        return parentPath.endsWith("/")
+                ? parentPath + childName
+                : parentPath + "/" + childName;
     }
 
 

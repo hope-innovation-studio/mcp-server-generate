@@ -62,9 +62,10 @@ public class McpGeneratorAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
     public BaseController baseController(
-            HttpToolDefinitionContext httpToolDefinitionContext
+            HttpToolDefinitionContext httpToolDefinitionContext,
+            HttpFileTreeContext httpFileTreeContext
     ) {
-        return new BaseController(httpToolDefinitionContext);
+        return new BaseController(httpToolDefinitionContext,httpFileTreeContext);
     }
 
 
