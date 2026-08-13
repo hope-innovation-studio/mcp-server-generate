@@ -56,12 +56,8 @@ public class GenerateController {
         return generateService.initHttpTsRootFolder(rootPath);
     }
 
-
     @PostMapping("init-framework-ts-folder")
     public R<FolderNode> initFrameworkTsFolder(){
         return generateService.initFrameworkTsFolder();
     }
-
-
-
 }

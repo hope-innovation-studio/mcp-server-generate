@@ -2,9 +2,11 @@ package org.hope.mcpservergenerate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.model.R;
+import org.hope.mcpservergenerate.model.tree.FolderNode;
 import org.hope.mcpservergenerate.service.impl.FileServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -25,8 +27,13 @@ public class FileController {
      * @return
      */
     @PostMapping("add-folder")
-    public R<String> addFolder(String parentId, String pathName){
+    public R<FolderNode> addFolder(
+            @RequestParam String parentId,
+            @RequestParam String pathName
+    ){
         return fileService.addFolder(parentId, pathName);
     }
+
+
 
 }
