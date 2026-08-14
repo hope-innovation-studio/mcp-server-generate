@@ -8,6 +8,7 @@ import org.hope.mcpservergenerate.controller.BaseController;
 import org.hope.mcpservergenerate.controller.FileController;
 import org.hope.mcpservergenerate.controller.GenerateController;
 import org.hope.mcpservergenerate.converter.impl.HttpToolDefinitionConverter;
+import org.hope.mcpservergenerate.converter.impl.TsHttpToolTemplateModelConverter;
 import org.hope.mcpservergenerate.scanner.SpringToolRegistration;
 
 
@@ -17,6 +18,7 @@ import org.hope.mcpservergenerate.scanner.ToolScanner;
 import org.hope.mcpservergenerate.service.impl.FileServiceImpl;
 import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
 
+import org.hope.mcpservergenerate.service.impl.TreeServiceImpl;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -112,8 +114,12 @@ public class McpGeneratorAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public GenerateServiceImpl generateService(Configuration freemarker,HttpToolDefinitionContext httpToolDefinitionContext, HttpFileTreeContext httpFileContext){
-        return new GenerateServiceImpl(freemarker, httpToolDefinitionContext, httpFileContext);
+    public GenerateServiceImpl generateService(Configuration freemarker,
+                                               HttpToolDefinitionContext httpToolDefinitionContext,
+                                               HttpFileTreeContext httpFileContext,
+                                               TsHttpToolTemplateModelConverter modelConverter,
+                                               TreeServiceImpl treeService){
+        return new GenerateServiceImpl(freemarker, httpToolDefinitionContext, httpFileContext,modelConverter,treeService);
     }
 
     @Bean
@@ -130,8 +136,8 @@ public class McpGeneratorAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public FileServiceImpl fileService(HttpFileTreeContext httpFileTreeContext){
-        return new FileServiceImpl(httpFileTreeContext);
+    public FileServiceImpl fileService(HttpFileTreeContext httpFileTreeContext,TreeServiceImpl treeService,TsHttpToolTemplateModelConverter modelConverter,HttpToolDefinitionContext httpToolDefinitionContext){
+        return new FileServiceImpl(httpFileTreeContext,treeService,modelConverter,httpToolDefinitionContext);
     }
 
     @Bean
@@ -140,4 +146,14 @@ public class McpGeneratorAutoConfiguration {
         return new FileController(fileService);
     }
 
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TsHttpToolTemplateModelConverter tsHttpToolTemplateModelConverter(){return new TsHttpToolTemplateModelConverter();}
+
+    @Bean
+    @ConditionalOnMissingBean
+    public TreeServiceImpl treeService(HttpFileTreeContext treeContext){
+        return new TreeServiceImpl(treeContext);
+    }
 }

@@ -37,12 +37,13 @@ public class GenerateController {
     }
 
     /**
+     * 生成工具在本地
      * @param toolName 工具英文名字
      * @param toolId 工具名字
      * @return
      */
-    @PostMapping("generate-http-ts-tool")
-    public R<String> generateToolInLocal(String toolName ,String toolId,String projectName) throws IOException {
+    @PostMapping("generate-http-ts-tool-in-local")
+    public R<String> generateToolInLocal(String toolName ,String toolId,String projectName) throws IOException, TemplateException {
         return generateService.generateToolInLocal(toolName,toolId,projectName);
     }
 
@@ -56,8 +57,16 @@ public class GenerateController {
         return generateService.initHttpTsRootFolder(rootPath);
     }
 
+    /**
+     * 将初始化文件框架添加到系统文件系统
+     * @return
+     */
     @PostMapping("init-framework-ts-folder")
     public R<FolderNode> initFrameworkTsFolder(){
         return generateService.initFrameworkTsFolder();
     }
+
+
+
+
 }
