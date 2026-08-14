@@ -2,10 +2,17 @@ package org.hope.mcpservergenerate.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.context.HttpFileTreeContext;
+import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
+import org.hope.mcpservergenerate.converter.impl.TsHttpToolTemplateModelConverter;
 import org.hope.mcpservergenerate.model.R;
+import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolTemplateModel;
+import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
 import org.hope.mcpservergenerate.model.tree.FileSystemNode;
 import org.hope.mcpservergenerate.model.tree.FolderNode;
-import java.util.List;
+import org.hope.mcpservergenerate.model.tree.httptemplatenode.TsHttpToolTemplateFileNode;
+
+import static org.hope.mcpservergenerate.constant.HttpConfigConstant.BASE_URL;
+import static org.hope.mcpservergenerate.constant.HttpGenerateFileConstant.REQUEST_FILE_PATH;
 
 /**
  * @author 关岁安
@@ -15,6 +22,13 @@ import java.util.List;
 public class FileServiceImpl {
 
     private final HttpFileTreeContext httpFileTreeContext;
+
+    private final TreeServiceImpl treeService;
+
+    private final TsHttpToolTemplateModelConverter modelConverter;
+
+    private final HttpToolDefinitionContext httpToolDefinitionContext;
+
 
     public R<FolderNode> addFolder(String parentId, String pathName) {
         if (parentId == null || parentId.isBlank()) {
@@ -26,14 +40,14 @@ public class FileServiceImpl {
 
         String folderName = pathName.trim();
         FileSystemNode root = httpFileTreeContext.getRoot();
-        FileSystemNode parentNode = findById(parentId, root);
+        FileSystemNode parentNode = treeService.findById(parentId, root);
         if (parentNode == null) {
             return R.fail(404, "父节点不存在");
         }
         if (!(parentNode instanceof FolderNode parentFolder)) {
             return R.fail(400, "不能在文件节点下创建文件夹");
         }
-        if (hasChildWithName(parentFolder, folderName)) {
+        if (treeService.hasChildWithName(parentFolder, folderName)) {
             return R.fail(409, "同级目录下已存在同名节点");
         }
 
@@ -41,57 +55,67 @@ public class FileServiceImpl {
         return R.success(newFolder);
     }
 
-    private boolean hasChildWithName(FolderNode parent, String nodeName) {
-        for (FileSystemNode child : parent.getChildren()) {
-            if (nodeName.equals(getNodeName(child))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private String buildChildPath(String parentPath, String childName) {
-        if (parentPath == null || parentPath.isBlank()) {
-            return childName;
-        }
-        return parentPath.endsWith("/")
-                ? parentPath + childName
-                : parentPath + "/" + childName;
-    }
-
-    private String getNodeName(FileSystemNode node) {
-        String path = node.getPath();
-        if (path == null || path.isBlank()) {
-            return "";
-        }
-        int separatorIndex = path.lastIndexOf('/');
-        return separatorIndex >= 0 ? path.substring(separatorIndex + 1) : path;
-    }
-
 
     /**
-     * 递归寻找有效节点
-     * @param nodeId
-     * @param node
+     * TODO 这个地方是不是可以解耦？
+     * 转化器这边
+     * @param toolName
+     * @param parentNodeId
+     * @param toolId
      * @return
      */
-    private FileSystemNode findById(String nodeId, FileSystemNode node){
-        if(node == null){
-            return null;
+    public R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> addHttpTsToolToFolder(String toolName,
+                                                                                         String parentNodeId,
+                                                                                         String toolId) {
+        if (toolName == null || toolName.isBlank()) {
+            return R.fail(400, "Tool 名称不能为空");
         }
-        if(node.getId().equals(nodeId)){
-            return node;
+        if (parentNodeId == null || parentNodeId.isBlank()) {
+            return R.fail(400, "父文件夹 ID 不能为空");
         }
-        if(node instanceof FolderNode folderNode){
-            List<FileSystemNode> children = folderNode.getChildren();
-            for (FileSystemNode child : children) {
-                FileSystemNode byId = findById(nodeId, child);
-                if(byId != null){
-                    return byId;
-                }
-            }
+        if (toolId == null || toolId.isBlank()) {
+            return R.fail(400, "Tool ID 不能为空");
         }
-        return null;
-    }
 
+        HttpToolDefinition httpToolDefinition = httpToolDefinitionContext.get().get(toolId);
+        if (httpToolDefinition == null) {
+            return R.fail(404, "Tool 不存在");
+        }
+
+        FileSystemNode parentNode = treeService.findById(parentNodeId);
+        if (!(parentNode instanceof FolderNode parentFolder)) {
+            return R.fail(400, "目标节点不是文件夹");
+        }
+
+        String normalizedToolName = toolName.trim();
+        /**
+         * TODO 是否应该在这里添加硬编码结构
+         */
+        String fileName = normalizedToolName + ".ts";
+        if (treeService.hasChildWithName(parentFolder, fileName)) {
+            return R.fail(409, "同级目录下已存在同名文件");
+        }
+
+        TsHttpToolTemplateModel templateModel = modelConverter.convert(
+                normalizedToolName,
+                httpToolDefinition,
+                BASE_URL
+        );
+
+        String filePath = treeService.buildChildPath(
+                parentFolder.getPath(),
+                fileName
+        );
+
+        TsHttpToolTemplateFileNode<TsHttpToolTemplateModel> fileNode =
+                new TsHttpToolTemplateFileNode<>(
+                        filePath,
+                        REQUEST_FILE_PATH,
+                        templateModel
+                );
+
+        parentFolder.add(fileNode);
+        return R.success(fileNode);
+
+    }
 }

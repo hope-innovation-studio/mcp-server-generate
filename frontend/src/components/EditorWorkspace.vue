@@ -2,11 +2,14 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { generateTool } from '../api/tool.js'
 import { calculateVisibleScrollLeft } from '../utils/tabScroll.js'
+import TemplateFilePreview from './TemplateFilePreview.vue'
 
 const props = defineProps({
   tabs: { type: Array, default: () => [] },
   activeTab: { type: Object, default: null },
   selectedNode: { type: Object, default: null },
+  addingTool: Boolean,
+  addToolError: { type: String, default: '' },
 })
 
 const emit = defineEmits(['activate-tab', 'close-tab', 'add-tool'])
@@ -100,12 +103,15 @@ function addCurrentTool() {
       </div>
     </div>
 
-    <div v-if="activeTab?.type === 'file'" class="editor-content file-preview">
-      <div class="file-preview-icon">&lt;/&gt;</div>
-      <p class="eyebrow">{{ fileNode?.nodeType || 'FILE' }}</p>
-      <h2>{{ nodeName }}</h2>
-      <code>{{ fileNode?.path }}</code>
-      <p>文件内容预览与在线编辑将在这里显示。</p>
+    <div v-if="activeTab?.type === 'file'" class="editor-content file-document">
+      <TemplateFilePreview v-if="fileNode?.nodeType === 'TEMPLATE_FILE'" :node="fileNode" />
+      <div v-else class="file-preview">
+        <div class="file-preview-icon">&lt;/&gt;</div>
+        <p class="eyebrow">{{ fileNode?.nodeType || 'FILE' }}</p>
+        <h2>{{ nodeName }}</h2>
+        <code>{{ fileNode?.path }}</code>
+        <p>普通文件将在接入内容接口后直接显示代码。</p>
+      </div>
     </div>
 
     <div v-else-if="!activeTab" class="editor-content empty-workspace">
@@ -169,10 +175,11 @@ function addCurrentTool() {
           <strong>{{ canAddTool ? selectedNode.path : '请先在左侧选择目标文件夹' }}</strong>
         </div>
         <input v-model="fileName" aria-label="生成文件名" :placeholder="`${tool.name}.ts`" />
-        <button class="secondary-button" type="button" :disabled="!canAddTool" @click="addCurrentTool">
-          添加到项目
+        <button class="secondary-button" type="button" :disabled="!canAddTool || addingTool" @click="addCurrentTool">
+          {{ addingTool ? '添加中…' : '添加到项目' }}
         </button>
       </section>
+      <p v-if="addToolError" class="notice error-notice project-action-error">{{ addToolError }}</p>
     </div>
   </section>
 </template>

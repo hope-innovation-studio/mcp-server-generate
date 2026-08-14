@@ -2,7 +2,9 @@ package org.hope.mcpservergenerate.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.model.R;
+import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolTemplateModel;
 import org.hope.mcpservergenerate.model.tree.FolderNode;
+import org.hope.mcpservergenerate.model.tree.httptemplatenode.TsHttpToolTemplateFileNode;
 import org.hope.mcpservergenerate.service.impl.FileServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +36,13 @@ public class FileController {
         return fileService.addFolder(parentId, pathName);
     }
 
-
+    @PostMapping("add-http-ts-tool-to-folder")
+    public R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> addHttpTsToolToFolder(
+            @RequestParam String toolName,
+            @RequestParam String parentNodeId,
+            @RequestParam String toolId
+    ){
+        return fileService.addHttpTsToolToFolder(toolName,parentNodeId,toolId);
+    }
 
 }

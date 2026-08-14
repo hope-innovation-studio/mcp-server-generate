@@ -1,7 +1,7 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { getToolList } from './api/tool.js'
-import { createFolder, getFileTree, initializeFrameworkTree } from './api/fileTree.js'
+import { addHttpToolToFolder, createFolder, getFileTree, initializeFrameworkTree } from './api/fileTree.js'
 import ToolSidebar from './components/ToolSidebar.vue'
 import ProjectExplorer from './components/ProjectExplorer.vue'
 import EditorWorkspace from './components/EditorWorkspace.vue'
@@ -18,6 +18,8 @@ const treeLoading = ref(false)
 const toolError = ref('')
 const treeError = ref('')
 const frameworkInitializing = ref(false)
+const addingToolToTree = ref(false)
+const addToolError = ref('')
 const openTabs = ref([])
 const activeTabId = ref('')
 const leftPanelWidth = ref(270)
@@ -121,17 +123,28 @@ function addFile({ parent, name }) {
   appendNode(parent, createLocalNode('STATIC_FILE', name, parent))
 }
 
-function addToolFile(fileName) {
-  if (!selectedTool.value) return
-  appendNode(selectedNode.value, {
-    ...createLocalNode('TEMPLATE_FILE', fileName),
-    toolId: selectedTool.value.id,
-    toolName: selectedTool.value.name,
-  })
+async function addToolFile(fileName) {
+  if (!selectedTool.value || nodeType(selectedNode.value) !== 'FOLDER') return
+  addingToolToTree.value = true
+  addToolError.value = ''
+  try {
+    const toolName = fileName.trim().replace(/\.ts$/i, '')
+    const fileNode = await addHttpToolToFolder({
+      toolName,
+      parentNodeId: selectedNode.value.id,
+      toolId: selectedTool.value.id,
+    })
+    appendNode(selectedNode.value, fileNode)
+  } catch (error) {
+    addToolError.value = error.message
+  } finally {
+    addingToolToTree.value = false
+  }
 }
 
 function selectTool(tool) {
   selectedTool.value = tool
+  addToolError.value = ''
   openTab({ id: `tool:${tool.id}`, type: 'tool', title: tool.name || '未命名 Tool', tool })
 }
 
@@ -264,6 +277,8 @@ onBeforeUnmount(() => {
       <ProjectExplorer
         :tree="fileTree"
         :selected-node="selectedNode"
+        :adding-tool="addingToolToTree"
+        :add-tool-error="addToolError"
         :loading="treeLoading"
         :initializing="frameworkInitializing"
         :error-message="treeError"

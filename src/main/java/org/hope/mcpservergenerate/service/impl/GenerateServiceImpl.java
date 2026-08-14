@@ -6,6 +6,7 @@ import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.context.HttpFileTreeContext;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
+import org.hope.mcpservergenerate.converter.impl.TsHttpToolTemplateModelConverter;
 import org.hope.mcpservergenerate.model.R;
 import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpParameterDefinition;
 import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
@@ -27,11 +28,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
-
+import static org.hope.mcpservergenerate.constant.HttpConfigConstant.BASE_URL;
 import static org.hope.mcpservergenerate.constant.HttpGenerateFileConstant.FRAMEWORKS_FILE_PATH;
 
 
@@ -48,7 +46,9 @@ public class GenerateServiceImpl {
 
     private final HttpFileTreeContext httpFileTreeContext;
 
-    private final String ipHost = "http://127.0.0.1:8080/";
+    private final TsHttpToolTemplateModelConverter modelConverter;
+
+    private final TreeServiceImpl treeService;
 
     private final String OUTPUT_PATH = "OUTPUT/";
 
@@ -108,53 +108,36 @@ public class GenerateServiceImpl {
      * @param toolId
      * @return
      */
-    public R<String> generateToolInLocal(String toolName,String toolId,String projectName) throws IOException {
-        TsHttpToolTemplateModel tsHttpToolTemplateModel = new TsHttpToolTemplateModel();
-        HttpToolDefinition httpToolDefinition = httpToolDefinitionContext.get().get(toolId);
-        String url = ipHost + httpToolDefinition.getEndpoint();
-        //获取转化后的参数
-        List<TsHttpToolParameterTemplateModel> tsHttpToolParameterTemplateModels = constructionTsHttpParam(httpToolDefinition.getParameters());
-        //按照local分一下组
-        Map<String, List<TsHttpToolParameterTemplateModel>> collect = tsHttpToolParameterTemplateModels.stream().collect(Collectors.groupingBy(TsHttpToolParameterTemplateModel::getLocation));
-        tsHttpToolTemplateModel.setToolName(toolName)
-                .setUrl(url)
-                .setDescription(httpToolDefinition.getDescription())
-                .setRequestMethod(httpToolDefinition.getRequestMethod())
-                .setAllTsHttpParameter(tsHttpToolParameterTemplateModels)
-                .setQueryTsHttpParameter(collect);
+    public R<String> generateToolInLocal(
+            String toolName,
+            String toolId,
+            String projectName
+    ) throws IOException, TemplateException {
+        HttpToolDefinition definition =
+                httpToolDefinitionContext.get().get(toolId);
+        if (definition == null) {
+            return R.fail(404, "Tool 不存在");
+        }
+        TsHttpToolTemplateModel model =
+                modelConverter.convert(toolName, definition, BASE_URL);
         Template template = freemarkerConfig.getTemplate(
                 "src/tool/request/request-tool.ts.ftl"
         );
-        //目标路径： OUT/projectName/tool/toolName.ts
-        //路径：OUT/
-        Path outputFile = Path.of(OUTPUT_PATH + projectName + "/" + toolName + ".ts");
+        Path outputFile = Path.of(
+                OUTPUT_PATH,
+                projectName,
+                toolName + ".ts"
+        );
         Files.createDirectories(outputFile.getParent());
         try (Writer writer = Files.newBufferedWriter(
                 outputFile,
                 StandardCharsets.UTF_8
         )) {
-            template.process(tsHttpToolTemplateModel, writer);
-        } catch (TemplateException e) {
-            throw new RuntimeException(e);
+            template.process(model, writer);
         }
         return R.success("成功添加");
-
-
     }
 
-    List<TsHttpToolParameterTemplateModel> constructionTsHttpParam(List<HttpParameterDefinition> list){
-        List<TsHttpToolParameterTemplateModel> ans = new ArrayList<>();
-        for (HttpParameterDefinition httpParameterDefinition : list) {
-            TsHttpToolParameterTemplateModel tsHttpToolParameterTemplateModel = new TsHttpToolParameterTemplateModel();
-            String zodSchema = ZodSchemaConverter.toZodSchema(httpParameterDefinition.getType());
-            tsHttpToolParameterTemplateModel
-                    .setKey(httpParameterDefinition.getKey())
-                    .setZodSchema(zodSchema)
-                    .setLocation(httpParameterDefinition.getLocation().name());
-            ans.add(tsHttpToolParameterTemplateModel);
-        }
-        return ans;
-    }
 
 
     /**
@@ -213,4 +196,5 @@ public class GenerateServiceImpl {
         System.out.println(print);
         return R.success(root);
     }
+
 }

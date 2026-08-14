@@ -16,3 +16,10 @@ export async function initializeFrameworkTree() {
     method: 'POST',
   }))
 }
+
+export async function addHttpToolToFolder({ toolName, parentNodeId, toolId }) {
+  const query = new URLSearchParams({ toolName, parentNodeId, toolId })
+  return unwrapResponse(await requestJson(`/generate/add-http-ts-tool-to-folder?${query}`, {
+    method: 'POST',
+  }))
+}
