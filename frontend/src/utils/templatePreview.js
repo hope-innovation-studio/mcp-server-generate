@@ -1,12 +1,20 @@
+export const PREVIEW_DEBOUNCE_MS = 800
+
 function pascalCase(value) {
   const normalized = String(value || 'Generated')
     .replace(/[^a-zA-Z0-9]+(.)/g, (_, character) => character.toUpperCase())
   return normalized.charAt(0).toUpperCase() + normalized.slice(1)
 }
 
+export function createToolClassName(toolName) {
+  const className = pascalCase(toolName).replace(/^[^a-zA-Z_$]+/, '')
+  return `${className || 'Generated'}Tool`
+}
+
 export function createTemplateVariables(node = {}) {
   const model = node.toolTemplateModel || {}
   return {
+    className: model.className || createToolClassName(model.toolName),
     toolName: model.toolName || 'generatedTool',
     description: model.description || '由 MCP Server Generate 创建的 Tool',
     requestMethod: model.requestMethod || 'GET',
@@ -15,32 +23,29 @@ export function createTemplateVariables(node = {}) {
   }
 }
 
-export function renderStaticToolCode(variables) {
-  const className = `${pascalCase(variables.toolName)}Tool`
-  const description = String(variables.description || '').replaceAll('"', '\\"')
-  return `import { McpTool } from "../framework/decorator/tool-register.decorator";
-import type { IMcpTool } from "../framework/interface/tool.interface";
-import { HttpClient } from "../framework/client/http-client";
-import * as z from "zod/v4";
-
-@McpTool()
-export class ${className} implements IMcpTool {
-    name = "${variables.toolName}";
-    description = "${description}";
-    inputSchema = z.object({});
-
-    async handler(params: Record<string, unknown>) {
-        const client = HttpClient.getInstance();
-        const result = await client.requestData({
-            method: "${variables.requestMethod}",
-            url: "${variables.url}",
-            params,
-        });
-
-        return {
-            content: [{ type: "text", text: JSON.stringify(result) }],
-        };
-    }
+function groupParametersByLocation(parameters) {
+  const groups = {}
+  for (const parameter of parameters) {
+    const location = parameter.location || 'UN_KNOW'
+    if (!groups[location]) groups[location] = []
+    groups[location].push(parameter)
+  }
+  return groups
 }
-`
+
+export function createPreviewRequest(nodeId, variables) {
+  const parameters = (variables.parameters || []).map((parameter) => ({ ...parameter }))
+
+  return {
+    nodeId,
+    tsHttpToolTemplateModel: {
+      className: variables.className || createToolClassName(variables.toolName),
+      toolName: variables.toolName,
+      description: variables.description,
+      requestMethod: variables.requestMethod,
+      url: variables.url,
+      queryTsHttpParameter: groupParametersByLocation(parameters),
+      allTsHttpParameter: parameters,
+    },
+  }
 }

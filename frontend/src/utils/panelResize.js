@@ -1,3 +1,8 @@
+export const PANEL_LIMITS = {
+  left: { min: 120, max: 520 },
+  right: { min: 160, max: 440 },
+}
+
 export function clampPanelWidth(width, min, max) {
   return Math.min(max, Math.max(min, width))
 }

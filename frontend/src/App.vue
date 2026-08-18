@@ -2,10 +2,11 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { getToolList } from './api/tool.js'
 import { addHttpToolToFolder, createFolder, getFileTree, initializeFrameworkTree } from './api/fileTree.js'
+import { createToolClassName } from './utils/templatePreview.js'
 import ToolSidebar from './components/ToolSidebar.vue'
 import ProjectExplorer from './components/ProjectExplorer.vue'
 import EditorWorkspace from './components/EditorWorkspace.vue'
-import { clampPanelWidth, resizePanel } from './utils/panelResize.js'
+import { PANEL_LIMITS, clampPanelWidth, resizePanel } from './utils/panelResize.js'
 
 const activeTransport = ref('HTTP')
 const searchText = ref('')
@@ -130,6 +131,7 @@ async function addToolFile(fileName) {
   try {
     const toolName = fileName.trim().replace(/\.ts$/i, '')
     const fileNode = await addHttpToolToFolder({
+      className: createToolClassName(toolName),
       toolName,
       parentNodeId: selectedNode.value.id,
       toolId: selectedTool.value.id,
@@ -192,6 +194,27 @@ function findParent(node, targetId) {
   return null
 }
 
+function findNode(node, targetId) {
+  if (!node) return null
+  if (node.id === targetId) return node
+  if (!Array.isArray(node.children)) return null
+  for (const child of node.children) {
+    const result = findNode(child, targetId)
+    if (result) return result
+  }
+  return null
+}
+
+function saveTemplateModel({ nodeId, templateModel }) {
+  const treeNode = findNode(fileTree.value, nodeId)
+  if (treeNode) treeNode.toolTemplateModel = templateModel
+
+  const tab = openTabs.value.find((item) => item.id === `file:${nodeId}`)
+  if (tab?.node && tab.node !== treeNode) {
+    tab.node.toolTemplateModel = templateModel
+  }
+}
+
 function renameNode({ node, name }) {
   const parts = node.path.split('/').filter(Boolean)
   parts[parts.length - 1] = name
@@ -222,7 +245,7 @@ function startResize(side, event) {
 
 function handleResize(event) {
   if (!resizeState) return
-  const limits = resizeState.side === 'left' ? { min: 220, max: 520 } : { min: 220, max: 440 }
+  const limits = PANEL_LIMITS[resizeState.side]
   const width = resizePanel({ ...resizeState, currentX: event.clientX, ...limits })
   if (resizeState.side === 'left') leftPanelWidth.value = width
   else rightPanelWidth.value = width
@@ -244,8 +267,16 @@ function resetPanel(side) {
 }
 
 onMounted(() => {
-  leftPanelWidth.value = clampPanelWidth(Number(localStorage.getItem('mcp-generator:left-panel-width')) || 270, 220, 520)
-  rightPanelWidth.value = clampPanelWidth(Number(localStorage.getItem('mcp-generator:right-panel-width')) || 280, 220, 440)
+  leftPanelWidth.value = clampPanelWidth(
+    Number(localStorage.getItem('mcp-generator:left-panel-width')) || 270,
+    PANEL_LIMITS.left.min,
+    PANEL_LIMITS.left.max,
+  )
+  rightPanelWidth.value = clampPanelWidth(
+    Number(localStorage.getItem('mcp-generator:right-panel-width')) || 280,
+    PANEL_LIMITS.right.min,
+    PANEL_LIMITS.right.max,
+  )
   loadTools()
   loadTree()
 })
@@ -306,6 +337,7 @@ onBeforeUnmount(() => {
         @activate-tab="activateTab"
         @close-tab="closeTab"
         @add-tool="addToolFile"
+        @save-template="saveTemplateModel"
       />
 
       <div

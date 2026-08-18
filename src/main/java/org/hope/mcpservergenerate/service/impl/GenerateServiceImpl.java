@@ -8,20 +8,25 @@ import org.hope.mcpservergenerate.context.HttpFileTreeContext;
 import org.hope.mcpservergenerate.context.HttpToolDefinitionContext;
 import org.hope.mcpservergenerate.converter.impl.TsHttpToolTemplateModelConverter;
 import org.hope.mcpservergenerate.model.R;
+import org.hope.mcpservergenerate.model.dto.preview.PreviewHttpTsTemplate;
 import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpParameterDefinition;
 import org.hope.mcpservergenerate.model.tooldefinition.httptooldefinition.HttpToolDefinition;
 import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolParameterTemplateModel;
 import org.hope.mcpservergenerate.model.templatemodel.ts.TsHttpToolTemplateModel;
 
+import org.hope.mcpservergenerate.model.tree.FileSystemNode;
 import org.hope.mcpservergenerate.model.tree.FileTreePrinter;
 import org.hope.mcpservergenerate.model.tree.FolderNode;
 import org.hope.mcpservergenerate.model.tree.httptemplatenode.TsHttpStaticTemplateFileNode;
+import org.hope.mcpservergenerate.model.tree.httptemplatenode.TsHttpToolTemplateFileNode;
+import org.hope.mcpservergenerate.model.vo.preview.FilePreviewResponse;
 import org.hope.mcpservergenerate.utils.json.ZodSchemaConverter;
 import org.springframework.stereotype.Component;
 
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -49,6 +54,8 @@ public class GenerateServiceImpl {
     private final TsHttpToolTemplateModelConverter modelConverter;
 
     private final TreeServiceImpl treeService;
+
+    private final FreeMarkerService freeMarkerService;
 
     private final String OUTPUT_PATH = "OUTPUT/";
 
@@ -104,11 +111,13 @@ public class GenerateServiceImpl {
     /**
      *
      * TODO 还需要加很多的东西
+     * @param className
      * @param toolName
      * @param toolId
      * @return
      */
     public R<String> generateToolInLocal(
+            String className,
             String toolName,
             String toolId,
             String projectName
@@ -119,7 +128,7 @@ public class GenerateServiceImpl {
             return R.fail(404, "Tool 不存在");
         }
         TsHttpToolTemplateModel model =
-                modelConverter.convert(toolName, definition, BASE_URL);
+                modelConverter.convert(className ,toolName, definition, BASE_URL);
         Template template = freemarkerConfig.getTemplate(
                 "src/tool/request/request-tool.ts.ftl"
         );
@@ -196,5 +205,67 @@ public class GenerateServiceImpl {
         System.out.println(print);
         return R.success(root);
     }
+
+    public R<FilePreviewResponse> previewTsHttpCode(
+            PreviewHttpTsTemplate preview
+    ) {
+        if (preview == null || preview.getNodeId() == null) {
+            return R.fail(400, "文件节点 ID 不能为空");
+        }
+
+        if (preview.getTsHttpToolTemplateModel() == null) {
+            return R.fail(400, "模板参数不能为空");
+        }
+
+        FileSystemNode node = treeService.findById(preview.getNodeId());
+
+        if (!(node instanceof TsHttpToolTemplateFileNode<?> templateFileNode)) {
+            return R.fail(404, "模板文件节点不存在");
+        }
+
+        try {
+            /**
+             * TODO 这里到时候需要修改FreeMarkerService的形式
+             */
+            Template template = freemarkerConfig.getTemplate(
+                    templateFileNode.getTemplatePath()
+            );
+
+            StringWriter writer = new StringWriter();
+
+            template.process(
+                    preview.getTsHttpToolTemplateModel(),
+                    writer
+            );
+
+            FilePreviewResponse response = new FilePreviewResponse(
+                    templateFileNode.getPath(),
+                    "typescript",
+                    writer.toString()
+            );
+
+            return R.success(response);
+        } catch (IOException | TemplateException e) {
+            return R.fail(500, "预览代码渲染失败：" + e.getMessage());
+        }
+    }
+
+    public R<FilePreviewResponse> updateTsHttpCode(PreviewHttpTsTemplate request) throws TemplateException, IOException {
+        String nodeId = request.getNodeId();
+        TsHttpToolTemplateModel tsHttpToolTemplateModel = request.getTsHttpToolTemplateModel();
+
+        TsHttpToolTemplateFileNode<TsHttpToolTemplateModel> node = (TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>) treeService.findById(nodeId);
+        String code = freeMarkerService.process(node.getTemplatePath(), node.getToolTemplateModel());
+
+        node.setToolTemplateModel(tsHttpToolTemplateModel);
+        FilePreviewResponse response = new FilePreviewResponse(
+                node.getPath(),
+                "typescript",
+                code
+        );
+
+        return R.success(response);
+    }
+
 
 }

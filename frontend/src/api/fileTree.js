@@ -6,7 +6,7 @@ export async function getFileTree() {
 
 export async function createFolder({ parentId, pathName }) {
   const query = new URLSearchParams({ parentId, pathName })
-  return unwrapResponse(await requestJson(`/generate/add-folder?${query}`, {
+  return unwrapResponse(await requestJson(`/file/add-folder?${query}`, {
     method: 'POST',
   }))
 }
@@ -17,9 +17,9 @@ export async function initializeFrameworkTree() {
   }))
 }
 
-export async function addHttpToolToFolder({ toolName, parentNodeId, toolId }) {
-  const query = new URLSearchParams({ toolName, parentNodeId, toolId })
-  return unwrapResponse(await requestJson(`/generate/add-http-ts-tool-to-folder?${query}`, {
+export async function addHttpToolToFolder({ className, toolName, parentNodeId, toolId }) {
+  const query = new URLSearchParams({ className, toolName, parentNodeId, toolId })
+  return unwrapResponse(await requestJson(`/file/add-http-ts-tool-to-folder?${query}`, {
     method: 'POST',
   }))
 }

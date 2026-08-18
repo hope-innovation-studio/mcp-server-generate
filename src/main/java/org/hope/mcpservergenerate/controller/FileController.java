@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @since 2026/8/12
  */
 @RestController
-@RequestMapping("/generate")
+@RequestMapping("/file")
 @RequiredArgsConstructor
 public class FileController {
 
@@ -40,9 +40,10 @@ public class FileController {
     public R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> addHttpTsToolToFolder(
             @RequestParam String toolName,
             @RequestParam String parentNodeId,
-            @RequestParam String toolId
+            @RequestParam String toolId,
+            @RequestParam String className
     ){
-        return fileService.addHttpTsToolToFolder(toolName,parentNodeId,toolId);
+        return fileService.addHttpTsToolToFolder(className, toolName, parentNodeId, toolId);
     }
 
 }

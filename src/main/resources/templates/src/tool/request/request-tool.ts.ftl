@@ -5,7 +5,7 @@ import { HttpClient } from "../../framework/client/http-client";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 @McpTool()
-export class DifyRetrieveTool implements IMcpTool {
+export class [=className] implements IMcpTool {
     name = "[=toolName?js_string]";
     description = "[=(description!'')?js_string]";
 

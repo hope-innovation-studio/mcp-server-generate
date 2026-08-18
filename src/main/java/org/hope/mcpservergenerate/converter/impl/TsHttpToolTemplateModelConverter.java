@@ -22,12 +22,14 @@ public class TsHttpToolTemplateModelConverter {
 
     /**
      * 将HttpToolDefinition转化模型定义
+     * @param className
      * @param toolName
      * @param definition
      * @param baseUrl
      * @return
      */
     public TsHttpToolTemplateModel convert(
+            String className,
             String toolName,
             HttpToolDefinition definition,
             String baseUrl
@@ -42,6 +44,7 @@ public class TsHttpToolTemplateModelConverter {
                         ));
 
         return new TsHttpToolTemplateModel()
+                .setClassName(className)
                 .setToolName(toolName)
                 .setUrl(baseUrl + definition.getEndpoint())
                 .setDescription(definition.getDescription())

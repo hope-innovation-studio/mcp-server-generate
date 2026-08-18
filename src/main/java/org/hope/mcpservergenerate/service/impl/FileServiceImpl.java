@@ -64,7 +64,8 @@ public class FileServiceImpl {
      * @param toolId
      * @return
      */
-    public R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> addHttpTsToolToFolder(String toolName,
+    public R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> addHttpTsToolToFolder(String className,
+                                                                                        String toolName,
                                                                                          String parentNodeId,
                                                                                          String toolId) {
         if (toolName == null || toolName.isBlank()) {
@@ -97,6 +98,7 @@ public class FileServiceImpl {
         }
 
         TsHttpToolTemplateModel templateModel = modelConverter.convert(
+                className,
                 normalizedToolName,
                 httpToolDefinition,
                 BASE_URL

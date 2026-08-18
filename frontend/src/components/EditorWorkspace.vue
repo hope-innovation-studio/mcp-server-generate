@@ -2,6 +2,7 @@
 import { computed, nextTick, ref, watch } from 'vue'
 import { generateTool } from '../api/tool.js'
 import { calculateVisibleScrollLeft } from '../utils/tabScroll.js'
+import { createToolClassName } from '../utils/templatePreview.js'
 import TemplateFilePreview from './TemplateFilePreview.vue'
 
 const props = defineProps({
@@ -12,7 +13,7 @@ const props = defineProps({
   addToolError: { type: String, default: '' },
 })
 
-const emit = defineEmits(['activate-tab', 'close-tab', 'add-tool'])
+const emit = defineEmits(['activate-tab', 'close-tab', 'add-tool', 'save-template'])
 const generating = ref(false)
 const resultMessage = ref('')
 const errorMessage = ref('')
@@ -67,6 +68,7 @@ async function handleGenerate() {
   errorMessage.value = ''
   try {
     resultMessage.value = await generateTool({
+      className: createToolClassName(tool.value.name),
       toolName: tool.value.name,
       toolId: tool.value.id,
       projectName: 'quick-preview',
@@ -104,7 +106,11 @@ function addCurrentTool() {
     </div>
 
     <div v-if="activeTab?.type === 'file'" class="editor-content file-document">
-      <TemplateFilePreview v-if="fileNode?.nodeType === 'TEMPLATE_FILE'" :node="fileNode" />
+      <TemplateFilePreview
+        v-if="fileNode?.nodeType === 'TEMPLATE_FILE'"
+        :node="fileNode"
+        @saved="$emit('save-template', $event)"
+      />
       <div v-else class="file-preview">
         <div class="file-preview-icon">&lt;/&gt;</div>
         <p class="eyebrow">{{ fileNode?.nodeType || 'FILE' }}</p>

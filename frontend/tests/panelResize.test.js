@@ -1,6 +1,11 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { clampPanelWidth, resizePanel } from '../src/utils/panelResize.js'
+import { PANEL_LIMITS, clampPanelWidth, resizePanel } from '../src/utils/panelResize.js'
+
+test('allows the compact explorer to shrink to 120 pixels', () => {
+  assert.equal(PANEL_LIMITS.left.min, 120)
+  assert.equal(PANEL_LIMITS.right.min, 160)
+})
 
 test('clamps sidebar width to its allowed range', () => {
   assert.equal(clampPanelWidth(120, 220, 520), 220)

@@ -44,7 +44,7 @@ public class TeacherController {
     }
 
 
-    @ExposeMcpTool
+
     @PostMapping("update-teacher")
     public Data update(@RequestParam String name,
                            @RequestParam Integer age) {
