@@ -3,12 +3,11 @@ package org.hope.mcpservergenerate.controller;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import org.hope.mcpservergenerate.model.R;
+import org.hope.mcpservergenerate.model.dto.preview.PreviewHttpTsTemplate;
 import org.hope.mcpservergenerate.model.tree.FolderNode;
+import org.hope.mcpservergenerate.model.vo.preview.FilePreviewResponse;
 import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -43,8 +42,8 @@ public class GenerateController {
      * @return
      */
     @PostMapping("generate-http-ts-tool-in-local")
-    public R<String> generateToolInLocal(String toolName ,String toolId,String projectName) throws IOException, TemplateException {
-        return generateService.generateToolInLocal(toolName,toolId,projectName);
+    public R<String> generateToolInLocal(String toolName ,String toolId,String projectName,String className) throws IOException, TemplateException {
+        return generateService.generateToolInLocal(className,toolName,toolId,projectName);
     }
 
     /**
@@ -66,7 +65,16 @@ public class GenerateController {
         return generateService.initFrameworkTsFolder();
     }
 
+    @PostMapping("preview-ts-http-code")
+    public R<FilePreviewResponse> previewTsHttpCode(@RequestBody PreviewHttpTsTemplate previewHttpTsTemplate){
+        return generateService.previewTsHttpCode(previewHttpTsTemplate);
+    }
 
-
+    @PostMapping("update-ts-http-code")
+    public R<FilePreviewResponse> updateTsHttpCode(@RequestBody PreviewHttpTsTemplate request) throws TemplateException, IOException {
+        return generateService.updateTsHttpCode(request);
+    }
+    
+    
 
 }

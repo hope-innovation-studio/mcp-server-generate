@@ -13,6 +13,7 @@ import java.util.Map;
 /**
  * @author 关岁安
  * @since 2026/8/8
+ * TODO我地方可以换成通用的 不用限死再TsHttp模式的
  */
 
 @Data

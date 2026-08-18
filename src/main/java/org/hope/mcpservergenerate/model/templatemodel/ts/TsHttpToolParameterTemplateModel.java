@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
+import static org.hope.mcpservergenerate.utils.id.SnowflakeIdGenerator.nextId;
+
 /**
  * @author 关岁安
  * @since 20268/8/8
@@ -14,6 +16,9 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class TsHttpToolParameterTemplateModel {
+
+    private String id = nextId();
+
     private String key;
 
     // "PATH"、"PARAM"、"HEADER"、"BODY"

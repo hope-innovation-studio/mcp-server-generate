@@ -52,22 +52,23 @@ class FileServiceImplTest {
     @Test
     void shouldAddHttpToolTemplateFileToFolder() {
         R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> result =
-                fileService.addHttpTsToolToFolder("queryOrder", toolsFolder.getId(), "tool-1");
+                fileService.addHttpTsToolToFolder("QueryOrderTool", "queryOrder", toolsFolder.getId(), "tool-1");
 
         assertEquals(200, result.getCode());
         assertNotNull(result.getData());
         assertEquals("default/src/tool/queryOrder.ts", result.getData().getPath());
         assertEquals(REQUEST_FILE_PATH, result.getData().getTemplatePath());
         assertEquals("queryOrder", result.getData().getToolTemplateModel().getToolName());
+        assertEquals("QueryOrderTool", result.getData().getToolTemplateModel().getClassName());
         assertEquals(result.getData(), toolsFolder.getChildren().get(0));
     }
 
     @Test
     void shouldRejectDuplicateToolFileName() {
-        fileService.addHttpTsToolToFolder("queryOrder", toolsFolder.getId(), "tool-1");
+        fileService.addHttpTsToolToFolder("QueryOrderTool", "queryOrder", toolsFolder.getId(), "tool-1");
 
         R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> result =
-                fileService.addHttpTsToolToFolder("queryOrder", toolsFolder.getId(), "tool-1");
+                fileService.addHttpTsToolToFolder("QueryOrderTool", "queryOrder", toolsFolder.getId(), "tool-1");
 
         assertEquals(409, result.getCode());
         assertEquals(1, toolsFolder.getChildren().size());
@@ -76,7 +77,7 @@ class FileServiceImplTest {
     @Test
     void shouldRejectMissingTool() {
         R<TsHttpToolTemplateFileNode<TsHttpToolTemplateModel>> result =
-                fileService.addHttpTsToolToFolder("missing", toolsFolder.getId(), "missing-id");
+                fileService.addHttpTsToolToFolder("MissingTool", "missing", toolsFolder.getId(), "missing-id");
 
         assertEquals(404, result.getCode());
         assertEquals(0, toolsFolder.getChildren().size());

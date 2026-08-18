@@ -17,6 +17,7 @@ import java.util.Map;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class TsHttpToolTemplateModel {
+    private String className;
     private String toolName;
     private String requestMethod;
     private String url;

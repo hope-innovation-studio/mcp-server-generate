@@ -23,7 +23,7 @@ test('createFolder sends parent id and folder name and returns backend node', as
     const folder = await createFolder({ parentId: 'root-id', pathName: 'src' })
 
     assert.equal(request.options.method, 'POST')
-    assert.match(request.url, /^\/generate\/add-folder\?/)
+    assert.match(request.url, /^\/file\/add-folder\?/)
     const query = new URLSearchParams(request.url.split('?')[1])
     assert.equal(query.get('parentId'), 'root-id')
     assert.equal(query.get('pathName'), 'src')
@@ -81,17 +81,19 @@ test('addHttpToolToFolder sends tool and parent identifiers and returns the temp
 
   try {
     const node = await addHttpToolToFolder({
+      className: 'QueryOrderTool',
       toolName: 'queryOrder',
       parentNodeId: 'folder-1',
       toolId: 'tool-1',
     })
 
     assert.equal(request.options.method, 'POST')
-    assert.match(request.url, /^\/generate\/add-http-ts-tool-to-folder\?/)
+    assert.match(request.url, /^\/file\/add-http-ts-tool-to-folder\?/)
     const query = new URLSearchParams(request.url.split('?')[1])
     assert.equal(query.get('toolName'), 'queryOrder')
     assert.equal(query.get('parentNodeId'), 'folder-1')
     assert.equal(query.get('toolId'), 'tool-1')
+    assert.equal(query.get('className'), 'QueryOrderTool')
     assert.equal(node.id, 'file-1')
   } finally {
     globalThis.fetch = originalFetch

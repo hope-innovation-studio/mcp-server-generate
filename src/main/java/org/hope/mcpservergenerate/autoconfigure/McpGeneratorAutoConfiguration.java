@@ -16,6 +16,7 @@ import org.hope.mcpservergenerate.scanner.ToolScanner;
 
 
 import org.hope.mcpservergenerate.service.impl.FileServiceImpl;
+import org.hope.mcpservergenerate.service.impl.FreeMarkerService;
 import org.hope.mcpservergenerate.service.impl.GenerateServiceImpl;
 
 import org.hope.mcpservergenerate.service.impl.TreeServiceImpl;
@@ -114,12 +115,19 @@ public class McpGeneratorAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
+    public FreeMarkerService freeMarkerService(Configuration freemarker){
+        return new FreeMarkerService(freemarker);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
     public GenerateServiceImpl generateService(Configuration freemarker,
                                                HttpToolDefinitionContext httpToolDefinitionContext,
                                                HttpFileTreeContext httpFileContext,
                                                TsHttpToolTemplateModelConverter modelConverter,
-                                               TreeServiceImpl treeService){
-        return new GenerateServiceImpl(freemarker, httpToolDefinitionContext, httpFileContext,modelConverter,treeService);
+                                               TreeServiceImpl treeService,
+                                               FreeMarkerService freeMarkerService){
+        return new GenerateServiceImpl(freemarker, httpToolDefinitionContext, httpFileContext,modelConverter,treeService,freeMarkerService);
     }
 
     @Bean

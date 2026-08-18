@@ -5,9 +5,9 @@ export async function getToolList() {
   return Array.isArray(data) ? data : Object.values(data || {})
 }
 
-export async function generateTool({ toolName, toolId, projectName }) {
-  const query = new URLSearchParams({ toolName, toolId, projectName })
-  return unwrapResponse(await requestJson(`/generate/generate-http-ts-tool?${query}`, {
+export async function generateTool({ className, toolName, toolId, projectName }) {
+  const query = new URLSearchParams({ className, toolName, toolId, projectName })
+  return unwrapResponse(await requestJson(`/generate/generate-http-ts-tool-in-local?${query}`, {
     method: 'POST',
   }))
 }
